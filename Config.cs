@@ -10,6 +10,7 @@ public class Config
     {
         products = new();
         enableCharmoji = true;
+        enableNotification = true;
         defaultMethod = OfficeType.MicrosoftOffice;
         foreach (var product in SupportedProducts)
         {
@@ -32,6 +33,8 @@ public class Config
     public Dictionary<string, OfficeProduct> products;
     [JsonInclude]
     public bool enableCharmoji;
+    [JsonInclude]
+    public bool enableNotification;
     [JsonInclude]
     public OfficeType defaultMethod;
 }

@@ -6,7 +6,6 @@ namespace WhatOffice;
 
 public static class OfficeChooser
 {
-
     public static OfficeType GetOfficeType(string docPath)
     {
         try
@@ -50,11 +49,8 @@ public static class OfficeChooser
             string ext = Path.GetExtension(docPath);
             return ext switch
             {
-                ".ppt" => AppType.Presentation,
                 ".pptx" => AppType.Presentation,
-                ".doc" => AppType.WordProcessing,
                 ".docx" => AppType.WordProcessing,
-                ".xls" => AppType.Spreadsheet,
                 ".xlsx" => AppType.Spreadsheet,
                 _ => AppType.Unknown,
             };

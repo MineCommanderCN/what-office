@@ -1,107 +1,106 @@
-using System.Diagnostics;
+Ôªøusing System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
-namespace WhatOffice
+namespace WhatOffice;
+
+public static class Program
 {
-    public static class Program
+    public static List<string> charmojis = new();
+    public static FileStream? logFile;
+    public static string? selfExePath;
+    public static string? configPath;
+    public static string? logPath;
+    public static string? charmojiPath;
+    public static string? iconPath;
+    /// <summary>
+    ///  The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    public static void Main(string[] args)
     {
-        public static List<string> charmojis = new();
-        public static FileStream? logFile;
-        public static string? selfExePath;
-        public static string? configPath;
-        public static string? logPath;
-        public static string? charmojiPath;
-        public static string? iconPath;
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        public static void Main(string[] args)
+        selfExePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "") ?? "";
+        configPath = Path.Combine(selfExePath, "config.json");
+        logPath = Path.Combine(selfExePath, "errors.log");
+        charmojiPath = Path.Combine(selfExePath, "charmoji.txt");
+        iconPath = Path.Combine(selfExePath, "icon.ico");
+        logFile = new FileStream(logPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+        try
         {
-            selfExePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "") ?? "";
-            configPath = Path.Combine(selfExePath, "config.json");
-            logPath = Path.Combine(selfExePath, "errors.log");
-            charmojiPath = Path.Combine(selfExePath, "charmoji.txt");
-            iconPath = Path.Combine(selfExePath, "icon.ico");
-            logFile = new FileStream(logPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+            string configFile = File.ReadAllText(configPath);
+            Config.Current = JsonSerializer.Deserialize<Config>(configFile) ?? Config.Default;
+        }
+        catch (Exception ex)
+        {
+            Config.Current = Config.Default;
+            logFile.Write(Encoding.UTF8.GetBytes(ex.ToString() + "\n"));
+        }
+        if (Config.Current.enableCharmoji)
+        {
             try
             {
-                string configFile = File.ReadAllText(configPath);
-                Config.Current = JsonSerializer.Deserialize<Config>(configFile) ?? Config.Default;
+                charmojis = File.ReadAllLines(charmojiPath).ToList();
             }
             catch (Exception ex)
             {
-                Config.Current = Config.Default;
                 logFile.Write(Encoding.UTF8.GetBytes(ex.ToString() + "\n"));
             }
+        }
+        if (args.Length >= 1)
+        {
+            NotifyIcon notifyIcon = new()
+            {
+                Icon = new Icon(File.OpenRead(iconPath)),
+                Text = "WhatOffice",
+                Visible = true
+            };
+            OfficeType officeType = OfficeChooser.GetOfficeType(args[0]);
+            AppType appType = OfficeChooser.GetAppType(args[0]);
+            string notifyTitle = "", notifyContent = "";
+            switch (appType)
+            {
+                case AppType.Presentation: notifyTitle = "PPT"; break;
+                case AppType.WordProcessing: notifyTitle = "Word"; break;
+                case AppType.Spreadsheet: notifyTitle = "Excel"; break;
+                case AppType.Unknown:
+                    notifyTitle = "‰Ω†ÁöÑÊâìÂºÄÊñπÂºèÂ§™Â•áÊÄ™‰∫Üorz";
+                    notifyContent = "Êú¨Á®ãÂ∫è‰∏çÊîØÊåÅÊâìÂºÄÊ≠§Êñá‰ª∂Ê†ºÂºèÔºÅ";
+                    notifyIcon.ShowBalloonTip(0, notifyTitle, notifyContent, ToolTipIcon.Error);
+                    return;
+            }
+
+            notifyTitle += "ÔºåÂêØÂä®ÔºÅ";
             if (Config.Current.enableCharmoji)
             {
                 try
                 {
-                    charmojis = File.ReadAllLines(charmojiPath).ToList();
+                    Random rand = new();
+                    int idx = rand.Next(charmojis.Count);
+                    notifyTitle += charmojis[idx];
                 }
                 catch (Exception ex)
                 {
                     logFile.Write(Encoding.UTF8.GetBytes(ex.ToString() + "\n"));
                 }
             }
-            if (args.Length >= 1)
+
+            if (officeType == OfficeType.Unknown)
             {
-                NotifyIcon notifyIcon = new()
-                {
-                    Icon = new Icon(File.OpenRead(iconPath)),
-                    Text = "WhatOffice",
-                    Visible = true
-                };
-                OfficeType officeType = OfficeChooser.GetOfficeType(args[0]);
-                AppType appType = OfficeChooser.GetAppType(args[0]);
-                string notifyTitle = "", notifyContent = "";
-                switch (appType)
-                {
-                    case AppType.Presentation: notifyTitle = "PPT"; break;
-                    case AppType.WordProcessing: notifyTitle = "Word"; break;
-                    case AppType.Spreadsheet: notifyTitle = "Excel"; break;
-                    case AppType.Unknown:
-                        notifyTitle = "ƒ„µƒ¥Úø™∑Ω ΩÃ´∆Êπ÷¡Àorz";
-                        notifyContent = "±æ≥Ã–Ú≤ª÷ß≥÷¥Úø™≥˝OfficeŒƒµµ“‘Õ‚µƒŒƒº˛∏Ò Ω£°";
-                        notifyIcon.ShowBalloonTip(0, notifyTitle, notifyContent, ToolTipIcon.Error);
-                        return;
-                }
-
-                notifyTitle += "£¨∆Ù∂Ø£°";
-                if (Config.Current.enableCharmoji)
-                {
-                    try
-                    {
-                        Random rand = new();
-                        int idx = rand.Next(charmojis.Count);
-                        notifyTitle += charmojis[idx];
-                    }
-                    catch (Exception ex)
-                    {
-                        logFile.Write(Encoding.UTF8.GetBytes(ex.ToString() + "\n"));
-                    }
-                }
-
-                if (officeType == OfficeType.Unknown)
-                {
-                    notifyContent = "Œ¥ƒ‹ ∂±Œƒº˛¿¥‘¥£¨≥¢ ‘ π”√ƒ¨»œ≥Ã–Ú¥Úø™£∫" + Config.SupportedProducts[(int)Config.Current.defaultMethod - 1];
-                }
-                else
-                {
-                    notifyContent = "“—◊‘∂Ø ∂±Œƒµµ¿¥‘¥£¨ π”√¥À≥Ã–Ú¥Úø™£∫" + Config.SupportedProducts[(int)officeType - 1];
-                }
-
-                notifyIcon.ShowBalloonTip(0, notifyTitle, notifyContent, ToolTipIcon.None);
-                OfficeChooser.LaunchOffice(officeType, args[0]);
+                notifyContent = "Êú™ËÉΩËØÜÂà´Êñá‰ª∂Êù•Ê∫êÔºåÂ∞ùËØï‰ΩøÁî®ÈªòËÆ§Á®ãÂ∫èÊâìÂºÄÔºö" + Config.SupportedProducts[(int)Config.Current.defaultMethod - 1];
             }
             else
             {
-                ApplicationConfiguration.Initialize();
-                Application.Run(new FormSettings());
+                notifyContent = "Â∑≤Ëá™Âä®ËØÜÂà´ÊñáÊ°£Êù•Ê∫êÔºå‰ΩøÁî®Ê≠§Á®ãÂ∫èÊâìÂºÄÔºö" + Config.SupportedProducts[(int)officeType - 1];
             }
 
+            if (Config.Current.enableNotification) notifyIcon.ShowBalloonTip(0, notifyTitle, notifyContent, ToolTipIcon.None);
+            OfficeChooser.LaunchOffice(officeType, args[0]);
         }
+        else
+        {
+            ApplicationConfiguration.Initialize();
+            Application.Run(new FormSettings());
+        }
+
     }
 }

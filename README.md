@@ -12,13 +12,17 @@
 1. 从 Release 界面下载最新版本的 zip 压缩包;
 2. 将文件解压到磁盘内即可完成安装。
 3. 直接运行 `WhatOffice.exe` 会打开设置界面，初次运行建议将所有 Office 程序的对应路径都填好。直接关闭设置界面即可保存设置。
-4. 将所有 Office 文档（`.docx`,`.pptx`,`.xlsx`,`.doc`,`.ppt`,`.xls`）的打开方式都修改为 `WhatOffice` 即可完成配置。
+4. 将所有 Office 文档（`.docx`,`.pptx`,`.xlsx`，注意本程序仅支持 OpenXML 格式文档（即以 `x` 结尾的拓展名））的打开方式都修改为 `WhatOffice` 即可完成配置。
 
 ## 支持的 Office 程序
 
 - [x] Mircosoft Office 全系
 - [x] [WPS Office](https://platform.wps.cn/)
 - [x] [LibreOffice](https://zh-cn.libreoffice.org/)
+
+## How it works?
+
+众所周知，OpenXML 文档（及传统的 Office 文档）的本质就是压缩包。解压后发现在 `docProps/app.xml` 文件中的 `Application` 字段储存了最后一次保存此文件的程序信息，直接读取之即可。为了做到极致的轻量化~~（其实是因为作者懒）~~程序甚至不会反序列化解析 XML 文件，而是用寻找子串的方式确定字段位置。
 
 ## 注意事项
 

@@ -4,7 +4,6 @@ namespace WhatOffice;
 
 public partial class FormSettings : Form
 {
-
     public FormSettings()
     {
         InitializeComponent();
@@ -18,6 +17,7 @@ public partial class FormSettings : Form
             dataGridView_path.Rows[lastRow].Cells["Presentation"].Value = Config.Current.products[product].appPresentation;
         }
         checkBox_charmoji.Checked = Config.Current.enableCharmoji;
+        checkBox_notify.Checked = Config.Current.enableNotification;
         comboBox_default.SelectedIndex = (int)Config.Current.defaultMethod - 1;
     }
 
@@ -33,6 +33,7 @@ public partial class FormSettings : Form
             Config.Current.products[productName] = newProd;
         }
         Config.Current.enableCharmoji = checkBox_charmoji.Checked;
+        Config.Current.enableNotification = checkBox_notify.Checked;
         Config.Current.defaultMethod = (OfficeType)(comboBox_default.SelectedIndex + 1);
         string configJson = JsonSerializer.Serialize(Config.Current);
         File.WriteAllText(Program.configPath ?? "", configJson);
