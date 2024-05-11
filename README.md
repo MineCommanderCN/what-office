@@ -8,7 +8,7 @@
 
 ## 使用方法
 
-0. 使用前请先下载并安装[.NET 6.0 桌面运行时 (x86)](https://dotnet.microsoft.com/zh-cn/download/dotnet/6.0)环境！
+0. 使用前请先下载并安装[.NET 6.0 桌面运行时](https://dotnet.microsoft.com/zh-cn/download/dotnet/6.0)环境！
 1. 从 Release 界面下载最新版本的 zip 压缩包;
 2. 将文件解压到磁盘内即可完成安装。
 3. 直接运行 `WhatOffice.exe` 会打开设置界面，初次运行建议将所有 Office 程序的对应路径都填好。直接关闭设置界面即可保存设置。
@@ -22,7 +22,7 @@
 
 ## How it works?
 
-众所周知，OpenXML 文档（及传统的 Office 文档）的本质就是压缩包。解压后发现在 `docProps/app.xml` 文件中的 `Application` 字段储存了最后一次保存此文件的程序信息，直接读取之即可。为了做到极致的轻量化~~（其实是因为作者懒）~~程序甚至不会反序列化解析 XML 文件，而是用寻找子串的方式确定字段位置。
+众所周知，OpenXML 文档（及传统的 Office 文档）的本质就是压缩包。解压后发现在 `docProps/app.xml` 文件中的 `Application` 字段储存了最后一次保存此文件的程序信息，直接读取之即可。为了做到极致的轻量化 ~~（其实是因为作者懒）~~ 程序甚至不会反序列化解析 XML 文件，而是用寻找子串的方式确定字段位置。
 
 ## 注意事项
 
