@@ -39,6 +39,7 @@
             comboBox_default = new ComboBox();
             checkBox_charmoji = new CheckBox();
             checkBox_notify = new CheckBox();
+            label_counter = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView_path).BeginInit();
             SuspendLayout();
             // 
@@ -50,7 +51,7 @@
             dataGridView_path.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView_path.Columns.AddRange(new DataGridViewColumn[] { _ProductName, WordProcessing, Spreadsheet, Presentation });
             dataGridView_path.Location = new Point(15, 34);
-            dataGridView_path.Margin = new Padding(4, 4, 4, 4);
+            dataGridView_path.Margin = new Padding(4);
             dataGridView_path.Name = "dataGridView_path";
             dataGridView_path.RowHeadersWidth = 51;
             dataGridView_path.RowTemplate.Height = 25;
@@ -110,7 +111,7 @@
             comboBox_default.FormattingEnabled = true;
             comboBox_default.Items.AddRange(new object[] { "微软Office", "WPS Office", "LibreOffice" });
             comboBox_default.Location = new Point(126, 381);
-            comboBox_default.Margin = new Padding(4, 4, 4, 4);
+            comboBox_default.Margin = new Padding(4);
             comboBox_default.Name = "comboBox_default";
             comboBox_default.Size = new Size(154, 28);
             comboBox_default.TabIndex = 3;
@@ -119,7 +120,7 @@
             // 
             checkBox_charmoji.AutoSize = true;
             checkBox_charmoji.Location = new Point(172, 424);
-            checkBox_charmoji.Margin = new Padding(4, 4, 4, 4);
+            checkBox_charmoji.Margin = new Padding(4);
             checkBox_charmoji.Name = "checkBox_charmoji";
             checkBox_charmoji.Size = new Size(106, 24);
             checkBox_charmoji.TabIndex = 4;
@@ -137,11 +138,21 @@
             checkBox_notify.Text = "启用任务栏通知";
             checkBox_notify.UseVisualStyleBackColor = true;
             // 
+            // label_counter
+            // 
+            label_counter.AutoSize = true;
+            label_counter.Location = new Point(682, 491);
+            label_counter.Name = "label_counter";
+            label_counter.Size = new Size(331, 20);
+            label_counter.TabIndex = 6;
+            label_counter.Text = "WhatOffice 已经帮您打开了 {0} 次文档！\\(^o^)/";
+            // 
             // FormSettings
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1029, 529);
+            Controls.Add(label_counter);
             Controls.Add(checkBox_notify);
             Controls.Add(checkBox_charmoji);
             Controls.Add(comboBox_default);
@@ -149,7 +160,7 @@
             Controls.Add(label_path);
             Controls.Add(dataGridView_path);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "FormSettings";
             Text = "WhatOffice 设置";
             FormClosing += FormSettings_FormClosing;
@@ -170,5 +181,6 @@
         private DataGridViewTextBoxColumn Spreadsheet;
         private DataGridViewTextBoxColumn Presentation;
         private CheckBox checkBox_notify;
+        private Label label_counter;
     }
 }

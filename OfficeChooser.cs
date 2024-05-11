@@ -46,7 +46,7 @@ public static class OfficeChooser
     {
         try
         {
-            string ext = Path.GetExtension(docPath);
+            string ext = Path.GetExtension(docPath).ToLower();
             return ext switch
             {
                 ".pptx" => AppType.Presentation,

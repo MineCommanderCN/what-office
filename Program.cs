@@ -17,7 +17,7 @@ public static class Program
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         selfExePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "") ?? "";
         configPath = Path.Combine(selfExePath, "config.json");
@@ -56,7 +56,8 @@ public static class Program
             };
             OfficeType officeType = OfficeChooser.GetOfficeType(args[0]);
             AppType appType = OfficeChooser.GetAppType(args[0]);
-            string notifyTitle = "", notifyContent = "";
+            string notifyTitle = "";
+            string notifyContent;
             switch (appType)
             {
                 case AppType.Presentation: notifyTitle = "PPT"; break;
@@ -92,9 +93,12 @@ public static class Program
             {
                 notifyContent = "已自动识别文档来源，使用此程序打开：" + Config.SupportedProducts[(int)officeType - 1];
             }
-
             if (Config.Current.enableNotification) notifyIcon.ShowBalloonTip(0, notifyTitle, notifyContent, ToolTipIcon.None);
             OfficeChooser.LaunchOffice(officeType, args[0]);
+            Config.Current.counter++;
+            string configJson = JsonSerializer.Serialize(Config.Current);
+            File.WriteAllText(configPath ?? "", configJson);
+            await Task.Delay(5000);
         }
         else
         {

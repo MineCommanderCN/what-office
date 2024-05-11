@@ -19,6 +19,7 @@ public partial class FormSettings : Form
         checkBox_charmoji.Checked = Config.Current.enableCharmoji;
         checkBox_notify.Checked = Config.Current.enableNotification;
         comboBox_default.SelectedIndex = (int)Config.Current.defaultMethod - 1;
+        label_counter.Text = string.Format(label_counter.Text, Config.Current.counter);
     }
 
     private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
